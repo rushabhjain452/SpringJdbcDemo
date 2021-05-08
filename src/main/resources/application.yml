@@ -1,0 +1,10 @@
+jasypt:
+  encryptor:
+    password: mysecretkey
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/EMPLOYEEDB
+    username: ENC(Q6jnjr0TbL39BpcFtz9R4A==)
+    password: ENC(4OOw7dJ6IZzbH+4B+LVu46kFoVS/Er1a)
+    driver-class-name: com.mysql.cj.jdbc.Driver
