@@ -28,29 +28,27 @@ public class EmployeeService {
 		}
 		else{
 //			return new Result<>(204, "No employees found.");
-			return new Result<>(400, "No employees found.");
+			return new Result<>(404, "No employees found.");
 		}
 	}
 	
 	public Result<EmployeeWithDept> findEmployeeById(int empid) {
-		List<EmployeeWithDept> empList = employeeRepository.findEmployeeById(empid);
-//		if(empList.size() > 0){
-		if(empList != null){
-			return new Result<>(200, empList.get(0));
+		EmployeeWithDept emp = employeeRepository.findEmployeeById(empid);
+		if(emp != null){
+			return new Result<>(200, emp);
 		}
 		else{
-			return new Result<>(400, "No employee found with empid : " + empid);
+			return new Result<>(404, "No employee found with empid : " + empid);
 		}
 	}
 	
 	public Result<Employee> findEmployeeByName(String name) {
 		List<Employee> empList = employeeRepository.findEmployeeByName(name);
-//		if(empList.size() > 0){
-		if(empList != null){
+		if(empList.size() > 0){
 			return new Result<>(200, empList.get(0));
 		}
 		else{
-			return new Result<>(400, "No employee found with name : " + name);
+			return new Result<>(404, "No employee found with name : " + name);
 		}
 	}
 
@@ -66,22 +64,22 @@ public class EmployeeService {
 	}
 
 	public Result<Employee> updateEmployee(int empid, Employee e) {
-		int n = employeeRepository.updateEmployee(empid, e);
-		if(n > 0){
+		boolean result = employeeRepository.updateEmployee(empid, e);
+		if(result){
 			return new Result<>(200, e);
 		}
 		else{
-			return new Result<>(400, "Unable to delete. Given employee id : " + empid + " not found.");
+			return new Result<>(404, "Unable to delete. Given employee id : " + empid + " not found.");
 		}
 	}
 
 	public Result<Employee> deleteEmployee(int empid) {
-		int n = employeeRepository.deleteEmployee(empid);
-		if(n > 0){
+		boolean result = employeeRepository.deleteEmployee(empid);
+		if(result){
 			return new Result<>(200, "Employee with id : " + empid + " deleted successfully.");
 		}
 		else{
-			return new Result<>(400, "Unable to delete. Given employee id : " + empid + " not found.");
+			return new Result<>(404, "Unable to delete. Given employee id : " + empid + " not found.");
 		}
 	}
 }

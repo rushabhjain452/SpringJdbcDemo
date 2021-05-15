@@ -7,16 +7,14 @@ import com.tutorialspoint.model.mapper.EmployeeWithDeptRowMapper;
 import com.tutorialspoint.model.resultsetextractor.EmployeeResultSetExtractor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.tutorialspoint.model.Employee;
-import com.tutorialspoint.model.mapper.EmployeeRowMapper;
 
 @Repository(value = "employeeRepo")
 public class EmployeeRepositoryImpl implements EmployeeRepository {
@@ -29,7 +27,6 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
 	@Override
 	public List<EmployeeWithDept> findAllEmployees() {
-//		String sql = "SELECT * FROM Employee";
 		String sql = "SELECT empid, e.name as ename, salary, e.deptid as deptid, d.name as dname FROM employee as e inner join dept as d on e.deptid=d.deptid";
 		List<EmployeeWithDept> empList = jdbcTemplate.query(sql, new EmployeeWithDeptRowMapper());
 		// Using BeanPropertyRowMapper
@@ -40,19 +37,25 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 	}
 
 	@Override
-	public List<EmployeeWithDept> findEmployeeById(int empid) {
+	public EmployeeWithDept findEmployeeById(int empid) {
 //		String sql = "SELECT * FROM Employee WHERE empid =" + empid;
 		String sql = "SELECT empid, e.name as ename, salary, e.deptid as deptid, d.name as dname " +
 				"FROM employee as e inner join dept as d on e.deptid=d.deptid " +
-				"WHERE empid = " + empid;
-		List<EmployeeWithDept> empList = jdbcTemplate.query(sql, new EmployeeWithDeptRowMapper());
-		return empList;
+				"WHERE empid = :empid";
+		MapSqlParameterSource params = new MapSqlParameterSource("empid", empid);
+		List<EmployeeWithDept> empList = jdbcTemplate.query(sql, params, new EmployeeWithDeptRowMapper());
+		if(empList.size() > 0){
+			return empList.get(0);
+		}else{
+			return null;
+		}
 	}
 	
 	@Override
 	public List<Employee> findEmployeeByName(String name) {
-		String sql = "SELECT * FROM Employee WHERE Name = '" + name + "'";
-		List<Employee> empList = jdbcTemplate.query(sql, new EmployeeResultSetExtractor());
+		String sql = "SELECT * FROM Employee WHERE Name = :name";
+		MapSqlParameterSource params = new MapSqlParameterSource("name", name);
+		List<Employee> empList = jdbcTemplate.query(sql, params, new EmployeeResultSetExtractor());
 		return empList;
 	}
 
@@ -73,20 +76,19 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 	}
 
 	@Override
-	public int updateEmployee(int empid, Employee e) {
+	public boolean updateEmployee(int empid, Employee e) {
 		e.setEmpid(empid);
 		String sql = "UPDATE Employee SET name=:name, salary=:salary, deptid=:deptid WHERE empid=:empid";
 		// public int update(String sql, SqlParameterSource paramSource, KeyHolder generatedKeyHolder)
 		int n = jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(e));
-		return n;
+		return n > 0;
 	}
 
 	@Override
-	public int deleteEmployee(int empid) {
-		Employee e = new Employee();
-		e.setEmpid(empid);
-		String sql = "DELETE FROM Employee WHERE empid=:empid";
-		return jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(e));
+	public boolean deleteEmployee(int empid) {
+		String sql = "DELETE FROM Employee WHERE empid = :empid";
+		MapSqlParameterSource params = new MapSqlParameterSource("empid", empid);
+		return jdbcTemplate.update(sql, params) > 0;
 	}
 
 }

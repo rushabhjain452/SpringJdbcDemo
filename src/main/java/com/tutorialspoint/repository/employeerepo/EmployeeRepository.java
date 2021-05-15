@@ -12,14 +12,14 @@ public interface EmployeeRepository {
 
 	List<EmployeeWithDept> findAllEmployees();
 	
-	List<EmployeeWithDept> findEmployeeById(int empid);
+	EmployeeWithDept findEmployeeById(int empid);
 	
 	List<Employee> findEmployeeByName(String name);
 	
 	int addEmployee(Employee e);
 	
-	int updateEmployee(int empid, Employee e);
+	boolean updateEmployee(int empid, Employee e);
 	
-	int deleteEmployee(int empid);
+	boolean deleteEmployee(int empid);
 	
 }
