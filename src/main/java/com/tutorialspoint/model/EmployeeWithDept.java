@@ -1,6 +1,7 @@
 package com.tutorialspoint.model;
 
 public class EmployeeWithDept extends Employee {
+
     private String deptName;
 
     public String getDeptName() {
@@ -10,4 +11,5 @@ public class EmployeeWithDept extends Employee {
     public void setDeptName(String deptName) {
         this.deptName = deptName;
     }
+
 }

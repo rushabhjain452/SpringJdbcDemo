@@ -3,6 +3,7 @@ package com.tutorialspoint.controller;
 import java.util.List;
 
 import com.tutorialspoint.model.EmployeeWithDept;
+import com.tutorialspoint.response.ResponseMessage;
 import com.tutorialspoint.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,6 @@ public class EmployeeController {
 	@GetMapping
 	public ResponseEntity<List<EmployeeWithDept>> getAllEmployees(){
 		Result<List<EmployeeWithDept>> empList = employeeService.findAllEmployees();
-//		System.out.println(empList.getMessage());
 		return new ResponseEntity<>(empList.getData(), HttpStatus.valueOf(empList.getCode()));
 	}
 	
@@ -40,8 +40,8 @@ public class EmployeeController {
 	}
 	
 	@GetMapping(path="/name/{name}")
-	public ResponseEntity<Employee> getEmployeeByName(@PathVariable String name) {
-		Result<Employee> empResult = employeeService.findEmployeeByName(name);
+	public ResponseEntity<List<Employee>> getEmployeeByName(@PathVariable String name) {
+		Result<List<Employee>> empResult = employeeService.findEmployeeByName(name);
 		return new ResponseEntity<>(empResult.getData(), HttpStatus.valueOf(empResult.getCode()));
 	}
 
@@ -58,8 +58,8 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/{empid}")
-	public ResponseEntity<Employee> deleteEmployee(@PathVariable int empid) {
+	public ResponseEntity<ResponseMessage> deleteEmployee(@PathVariable int empid) {
 		Result<Employee> empResult = employeeService.deleteEmployee(empid);
-		return new ResponseEntity<>(empResult.getData(), HttpStatus.valueOf(empResult.getCode()));
+		return new ResponseEntity<>(new ResponseMessage((empResult.getMessage())), HttpStatus.valueOf(empResult.getCode()));
 	}
 }

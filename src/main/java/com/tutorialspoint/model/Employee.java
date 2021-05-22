@@ -51,8 +51,6 @@ public class Employee {
 		this.deptid = deptid;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "Employee [empid=" + empid + ", name=" + name + ", salary=" + salary + "]";

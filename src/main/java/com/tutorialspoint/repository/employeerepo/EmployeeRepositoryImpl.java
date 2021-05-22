@@ -19,9 +19,6 @@ import com.tutorialspoint.model.Employee;
 @Repository(value = "employeeRepo")
 public class EmployeeRepositoryImpl implements EmployeeRepository {
 	
-//	@Autowired
-//	private JdbcTemplate jdbcTemplate;
-	
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -61,9 +58,6 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
 	@Override
 	public int addEmployee(Employee e) {
-		// Using Statement
-//		String sql = "INSERT INTO EMPLOYEE (name, salary) VALUES ('" + e.getName() + "', " + e.getSalary() + ")";
-//		int n = jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(e));
 		KeyHolder holder = new GeneratedKeyHolder();
 		String sql = "INSERT INTO EMPLOYEE (name, salary, deptid) VALUES (:name, :salary, :deptid)";
 		int n = jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(e), holder);

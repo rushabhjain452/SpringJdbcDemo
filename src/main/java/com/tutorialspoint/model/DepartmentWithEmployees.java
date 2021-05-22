@@ -16,7 +16,5 @@ import lombok.Setter;
 public class DepartmentWithEmployees extends Department {
 	
 	private List<Employee> employeeList;
-	
-//	@JsonProperty("employees")
-//	Employee employee;
+
 }
