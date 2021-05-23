@@ -3,7 +3,6 @@ package com.tutorialspoint.controller;
 import java.util.List;
 
 import com.tutorialspoint.model.EmployeeWithDept;
-import com.tutorialspoint.response.ResponseMessage;
 import com.tutorialspoint.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,8 +57,8 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/{empid}")
-	public ResponseEntity<ResponseMessage> deleteEmployee(@PathVariable int empid) {
-		Result<Employee> empResult = employeeService.deleteEmployee(empid);
-		return new ResponseEntity<>(new ResponseMessage((empResult.getMessage())), HttpStatus.valueOf(empResult.getCode()));
+	public ResponseEntity<Result<String>> deleteEmployee(@PathVariable int empid) {
+		Result<String> empResult = employeeService.deleteEmployee(empid);
+		return new ResponseEntity<>(empResult, HttpStatus.valueOf(empResult.getCode()));
 	}
 }

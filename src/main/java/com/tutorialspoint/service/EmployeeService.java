@@ -58,7 +58,7 @@ public class EmployeeService {
 		throw new ResultException(new Result<>(404, "Employee with EmployeeId: " + empid + " not found."));
 	}
 
-	public Result<Employee> deleteEmployee(int empid) {
+	public Result<String> deleteEmployee(int empid) {
 		boolean result = employeeRepository.deleteEmployee(empid);
 		if(result){
 			return new Result<>(200, "Employee with id : " + empid + " deleted successfully.");

@@ -1,6 +1,5 @@
 package com.tutorialspoint.exception;
 
-import com.tutorialspoint.response.ResponseMessage;
 import com.tutorialspoint.response.Result;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
@@ -17,28 +16,32 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ResultExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({Exception.class})
-    private ResponseEntity<ResponseMessage> exception(Exception ex) {
-        return new ResponseEntity<>(new ResponseMessage("unfortunately! there was some error at the server side."), HttpStatus.INTERNAL_SERVER_ERROR);
+    private ResponseEntity<Result<String>> handleException(Exception ex) {
+        Result<String> result = new Result(500, "unfortunately! there was some error at the server side.");
+        return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({ResultException.class})
-    private ResponseEntity<ResponseMessage> resultException(ResultException ex) {
+    private ResponseEntity<Result<Object>> handleResultException(ResultException ex) {
         Result<Object> result = ex.getResult();
-        return new ResponseEntity<>(new ResponseMessage(result.getMessage()), HttpStatus.valueOf(result.getCode()));
+        return new ResponseEntity<>(result, HttpStatus.valueOf(result.getCode()));
     }
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ResponseMessage("Error! unable to parse the given data"), HttpStatus.BAD_REQUEST);
+        Result<String> result = new Result<>(400, "Error! unable to parse the given data");
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ResponseMessage("Missing! Object body missing"), HttpStatus.BAD_REQUEST);
+        Result<String> result = new Result<>(400, "Missing! Object body missing");
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new ResponseMessage("Error! unable to read the given data"), HttpStatus.BAD_REQUEST);
+        Result<String> result = new Result<>(400, "Error! unable to read the given data");
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 }
